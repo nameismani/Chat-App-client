@@ -5,9 +5,11 @@ import { selectCurrentUser, signoutSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import SideDrawer from "../components/SideDrawer";
+import { ChatBox, MyChats } from "../components";
 
 const Chat = () => {
   const { currentUser } = useSelector(selectCurrentUser);
+  const [fetchAgain, setFetchAgain] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -55,9 +57,17 @@ const Chat = () => {
   return (
     <>
       {currentUser && <SideDrawer />}
-      <Box>
-        {/* {currentUser && <MyChats />} */}
-        {/* {currentUser && <ChatBox />} */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        w="100%"
+        h="91.5vh"
+        p="10px"
+      >
+        {currentUser && <MyChats fetchAgain={fetchAgain} />}
+        {currentUser && (
+          <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+        )}
       </Box>
     </>
   );

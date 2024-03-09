@@ -11,10 +11,14 @@ const selectedChatSlice = createSlice({
     selectedChatSuccess: (state, action) => {
       state.selectedChat = action.payload;
     },
+    emptySelectedChat: (state, action) => {
+      state.selectedChat = null;
+    },
   },
 });
 
-export const { selectedChatSuccess } = selectedChatSlice.actions;
+export const { selectedChatSuccess, emptySelectedChat } =
+  selectedChatSlice.actions;
 
 export const selectSelectedChat = (state) => state.selectedChat;
 export default selectedChatSlice.reducer;

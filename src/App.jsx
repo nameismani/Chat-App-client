@@ -37,7 +37,7 @@ const Layout = () => {
 
 function App() {
   return (
-    <div className="min-h-screen flex bg-[#f0f2f5]">
+    <div className="min-h-screen flex flex-col bg-[#f0f2f5]">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route element={<Layout />}>

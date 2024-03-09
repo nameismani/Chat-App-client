@@ -38,12 +38,13 @@ import {
   selectNotifications,
 } from "../redux/notification/notificationSlice";
 import { addChats, selectChats } from "../redux/chats/chatsSlice";
+import ProfileModal from "./ProfileModal";
+import UserListItem from "./UserListItem";
+import { getSender } from "../utils/Chatlogics";
 // import ProfileModal from "./ProfileModal";
 // import NotificationBadge from "react-notification-badge";
 // import { Effect } from "react-notification-badge";
 // import { getSender } from "../../config/ChatLogics";
-// import UserListItem from "../userAvatar/UserListItem";
-// import { ChatState } from "../../Context/ChatProvider";
 
 function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -105,9 +106,20 @@ function SideDrawer() {
     try {
       setLoading(true);
       const { data } = await axios.get(`/api/user?search=${search}`);
-
-      setLoading(false);
-      setSearchResult(data);
+      console.log(data);
+      if (data.success) {
+        setLoading(false);
+        setSearchResult(data.data);
+      } else {
+        toast({
+          title: "Error Occured!",
+          description: data.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      }
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -134,6 +146,7 @@ function SideDrawer() {
       const { data } = await axios.post(`/api/chat`, { userId }, config);
 
       // if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      console.log(chats);
       if (!chats.find((c) => c._id === data._id)) dispatch(addChats(data));
 
       // setSelectedChat(data);
@@ -158,10 +171,11 @@ function SideDrawer() {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        bg="#f0f2f5"
         w="100%"
         p="5px 10px 5px 10px"
-        borderWidth="5px"
+        borderWidth="3px"
+        borderColor="#00a783"
         // className="flex"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
@@ -226,9 +240,9 @@ function SideDrawer() {
               />
             </MenuButton>
             <MenuList>
-              {/* <ProfileModal user={user}>
+              <ProfileModal user={user}>
                 <MenuItem>My Profile</MenuItem>{" "}
-              </ProfileModal> */}
+              </ProfileModal>
               <MenuDivider />
               <MenuItem onClick={handleSignOut}>Logout</MenuItem>
             </MenuList>
@@ -252,15 +266,16 @@ function SideDrawer() {
             </Box>
             {loading ? (
               <ChatLoading />
-            ) : //   searchResult?.map((user) => (
-            // <UserListItem
-            //   key={user._id}
-            //   user={user}
-            //   handleFunction={() => accessChat(user._id)}
-            // />
-            //   ))
-            null}
-            {loadingChat && <Spinner ml="auto" d="flex" />}
+            ) : (
+              searchResult?.map((user) => (
+                <UserListItem
+                  key={user._id}
+                  user={user}
+                  handleFunction={() => accessChat(user._id)}
+                />
+              ))
+            )}
+            {loadingChat && <Spinner ml="auto" display="flex" />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  chats: null,
+  chats: [],
 };
 
 const chatsSlice = createSlice({
@@ -9,12 +9,16 @@ const chatsSlice = createSlice({
   initialState,
   reducers: {
     addChats: (state, action) => {
-      state.chats = state.chats.unShift(action.payload);
+      console.log(state.chats);
+      state.chats.unshift(action.payload);
+    },
+    fetchChatsSuccess: (state, action) => {
+      state.chats = action.payload;
     },
   },
 });
 
-export const { addChats } = chatsSlice.actions;
+export const { addChats, fetchChatsSuccess } = chatsSlice.actions;
 
 export const selectChats = (state) => state.chats;
 export default chatsSlice.reducer;
